@@ -14,12 +14,10 @@ router.get('/test', (req, res)=> res.json({
   msg: "users works"
 }))
 
-//@route  Get api/users/registration
+//@route  POST api/users/registration
 //@desc   users can register
 //@acces public
-
 router.post('/register', (req, res)=>{
-// })
   User.findOne({email: req.body.email })
   .then((user)=>{
     if(user){
@@ -52,7 +50,35 @@ router.post('/register', (req, res)=>{
   })
 })
 
-// .then(data=> res.json(`user was created`, data))
-// .catch(err => console.log(err))
+//@route  Get api/users/login
+//@desc   Login user /  returning  a JWT token
+//@acces public
+
+router.post('/login', (req, res)=>{
+  const email = req.body.email
+  const password = req.body.password
+  //find user by email
+
+  User.findOne({email})
+  .then((user)=>{
+    if(!user){
+      console.log("user not found ");
+      return res.status(400).json({email: "User not found"})
+    }
+
+    //check password
+    bcrypt.compare(password, user.password)
+    .then((data) => {
+      if(data){
+        console.log("password compare with bcrypt is correct", data);
+        res.json({msg: "success"})
+      }else{
+        console.log("password doesnt match with our records");
+          return res.status(400).json({password: "password incorrect"})
+      }
+    })
+  })
+})
+
 
 module.exports =  router
