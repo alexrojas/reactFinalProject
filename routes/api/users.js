@@ -47,7 +47,7 @@ router.post('/register', (req, res)=>{
         bcrypt.hash(newUser.password, salt, (err, hash) =>{
           if(err){
             console.log(err);};
-          console.log("carahi")
+          // console.log("carahi")
           newUser.password = hash
           newUser.save()
           .then(response => {
@@ -121,8 +121,8 @@ router.post('/login', (req, res)=>{
 //@acces private
 router.get('/current', passport.authenticate('jwt', {session: false}),
  (req, res)=>{
-  console.log(req)
-  // console.log(req.session)
+  // console.log('carajo',req.user)
+
   res.json({
     id: req.user.id,
     name: req.user.name,
