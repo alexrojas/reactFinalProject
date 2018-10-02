@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require("mongoose");
 const passport = require('passport')
+const validateProfileInput = require('../../validation/profile')
 // const keys = require('../../config/keys')
 
 //bring the Models from user and profile
@@ -38,10 +39,17 @@ router.get('/', passport.authenticate('jwt', {session: false}),
 //@acces  private (only signed in users, based on the payload)
 router.post('/', passport.authenticate('jwt', {session: false}),
 (req, res)=> {
+
+    const { errors, isValid} = validateProfileInput(req.body)
+
+    if(!isValid){
+      return res.status(400).json(errors)
+    }
+
   //get Fields from req.body
   const profileFields = {}
   profileFields.user = req.user.id
-  if(req.body.handle)       profileFields.handle = req.body.handle // i might not use this one
+  // if(req.body.handle)       profileFields.handle = req.body.handle // i might not use this one
   if(req.body.car)          profileFields.car = req.body.car
   if(req.body.status)       profileFields.status = req.body.status
   if(req.body.message)      profileFields.message = req.body.message
@@ -51,7 +59,7 @@ router.post('/', passport.authenticate('jwt', {session: false}),
   if(req.body.message)      profileFields.message = req.body.message
   //Addres is an object so i need to split
   profileFields.address = {}
-  if(req.body.street) profileFields.address.street = req.body.address
+  if(req.body.street) profileFields.address.street = req.body.street
   if(req.body.city)   profileFields.address.city = req.body.city
   if(req.body.state)  profileFields.address.state = req.body.state
   if(req.body.zip)    profileFields.address.zip = req.body.zip
@@ -63,7 +71,7 @@ router.post('/', passport.authenticate('jwt', {session: false}),
   if(req.body.instagram)  profileFields.social.instagram = req.body.instagram
 
   Profile.findOne({ user: profileFields.user})
-  then((profile)=>{
+  .then((profile)=>{
     if(profile){
       //this means this will be an update, because it exist this profile
       Profile.findOneAndUpdate(
