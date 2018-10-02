@@ -10,6 +10,7 @@ const keys = require('../../config/keys')
 
 // load input validation
 const validateRegisterInput = require('../../validation/register')
+const validateLoginInput = require('../../validation/login')
 //@route  Get api/users/test
 //@desc   TEsts the users route
 //@acces  this one is public
@@ -30,14 +31,16 @@ router.post('/register', (req, res)=>{
 
   User.findOne({email: req.body.email })
   .then((user)=>{
+    errors.email = "Email already exists"
     if(user){
       console.log("This user already exist", user);
-      return res.json({email: 'Email already exist'})
+      return res.json(errors)
     }else{
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        address: req.body.address
       })
 
       bcrypt.genSalt(10, (err, salt)=>{
@@ -66,15 +69,21 @@ router.post('/register', (req, res)=>{
 //@acces public
 
 router.post('/login', (req, res)=>{
+  const { errors, isValid} = validateLoginInput(req.body)
+
+  if(!isValid){
+    return res.status(400).json(errors)
+  }
+
   const email = req.body.email
   const password = req.body.password
   //find user by email
-
   User.findOne({email})
   .then((user)=>{
     if(!user){
       console.log("user not found ");
-      return res.status(400).json({email: "User not found"})
+      errors.email = "User not found"
+      return res.status(400).json(errors)
     }
 
     //check password
@@ -90,7 +99,8 @@ router.post('/login', (req, res)=>{
         jwt.sign(
           payload,
           keys.secretOrKey,
-          {expiresIn: 3600}, (err, token) =>{
+          {expiresIn: 3600},
+          (err, token) =>{
             res.json({
               sucess: true,
               token: 'Bearer ' + token
@@ -99,7 +109,8 @@ router.post('/login', (req, res)=>{
 
       }else{
         console.log("password doesnt match with our records");
-          return res.status(400).json({password: "password incorrect"})
+        errors.password = "Password Incorrect"
+          return res.status(400).json(errors)
       }
     })
   })
@@ -108,8 +119,9 @@ router.post('/login', (req, res)=>{
 //@route  Get api/users/current
 //@desc   return current user
 //@acces private
-router.get('/current', passport.authenticate('jwt', {session: false}), (req, res)=>{
-  // console.log(req)
+router.get('/current', passport.authenticate('jwt', {session: false}),
+ (req, res)=>{
+  console.log(req)
   // console.log(req.session)
   res.json({
     id: req.user.id,
