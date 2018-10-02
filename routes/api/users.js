@@ -8,7 +8,8 @@ const User = require('../../models/User')
 const jwt = require('jsonwebtoken')
 const keys = require('../../config/keys')
 
-
+// load input validation
+const validateRegisterInput = require('../../validation/register')
 //@route  Get api/users/test
 //@desc   TEsts the users route
 //@acces  this one is public
@@ -21,6 +22,12 @@ router.get('/test', (req, res)=> res.json({
 //@desc   users can register
 //@acces public
 router.post('/register', (req, res)=>{
+  const { errors, isValid} = validateRegisterInput(req.body)
+
+  if(!isValid){
+    return res.status(400).json(errors)
+  }
+
   User.findOne({email: req.body.email })
   .then((user)=>{
     if(user){
@@ -35,7 +42,8 @@ router.post('/register', (req, res)=>{
 
       bcrypt.genSalt(10, (err, salt)=>{
         bcrypt.hash(newUser.password, salt, (err, hash) =>{
-          if(err){throw err};
+          if(err){
+            console.log(err);};
           console.log("carahi")
           newUser.password = hash
           newUser.save()
