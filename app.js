@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const mongoose  =  require('mongoose')
+const passport = require('passport')
 
 const users = require('./routes/api/users')
 const profile = require('./routes/api/profile')
@@ -37,9 +38,14 @@ mongoose.connect(db)
 .catch(err => console.log(err))
 
 
-app.get('/', (req, res)=>{
-  res.send("test1 working ")
-})
+//passport middleware
+app.use(passport.initialize())
+//passport config
+require('./config/passport')(passport)
+
+// app.get('/', (req, res)=>{
+//   res.send("test1 working ")
+// })
 
 //use routes
 app.use('/api/users', users)

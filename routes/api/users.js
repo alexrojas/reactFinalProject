@@ -2,8 +2,11 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs')
+const passport = require('passport')
 
 const User = require('../../models/User')
+const jwt = require('jsonwebtoken')
+const keys = require('../../config/keys')
 
 
 //@route  Get api/users/test
@@ -68,10 +71,24 @@ router.post('/login', (req, res)=>{
 
     //check password
     bcrypt.compare(password, user.password)
-    .then((data) => {
-      if(data){
-        console.log("password compare with bcrypt is correct", data);
-        res.json({msg: "success"})
+    .then((isMatch) => {
+      if(isMatch){
+        //User matched
+        console.log("password compare with bcrypt is correct", isMatch);
+        // req.session.currentUser = user;
+        const payload = { id: user.id, name: user.name } //create JWT payload
+        // res.json({msg: "success"})
+        //sign token
+        jwt.sign(
+          payload,
+          keys.secretOrKey,
+          {expiresIn: 3600}, (err, token) =>{
+            res.json({
+              sucess: true,
+              token: 'Bearer ' + token
+            })
+        })
+
       }else{
         console.log("password doesnt match with our records");
           return res.status(400).json({password: "password incorrect"})
@@ -80,5 +97,17 @@ router.post('/login', (req, res)=>{
   })
 })
 
+//@route  Get api/users/current
+//@desc   return current user
+//@acces private
+router.get('/current', passport.authenticate('jwt', {session: false}), (req, res)=>{
+  // console.log(req)
+  // console.log(req.session)
+  res.json({
+    id: req.user.id,
+    name: req.user.name,
+    email: req.user.email
+  })
+})
 
 module.exports =  router
