@@ -34,6 +34,41 @@ router.get('/', passport.authenticate('jwt', {session: false}),
   .catch(err => res.status(404).json(err))
 })
 
+//@route  Get api/profile/all
+//@desc   get all profilesr
+//@acces  public
+router.get('/all', (req, res)=>{
+  const errors = {}
+  Profile.find()
+  .populate('user', ['name', 'email'])
+  .then((profiles)=>{
+    if(!profiles){
+      errors.noprofiles = "There is no  profile created"
+      return res.status(404).json(errors)
+    }
+     res.json(profiles)
+  })
+  .catch(err => res.status(404).json({profiles: "There are not profiles"}))
+})
+
+//@route  Get api/profile/user/:user_id
+//@desc   get profile by user
+//@acces  public
+router.get('/user/:user_id', (req, res)=>{
+  console.log("req.params1", req.params);
+  const errors = {}
+  Profile.findOne({user: req.params.user_id})
+  .populate('user', ['name', 'email'])
+  .then((profile)=>{
+    if(!profile){
+      errors.noprofile = "There is no profile for this user"
+      res.status(404).json(errors)
+    }
+    res.json(profile)
+  })
+  .catch(err => res.status(404).json({profile: "There is no profile for this user"}))
+})
+
 
 //@route  POST api/profile
 //@desc   create or edit user profile
