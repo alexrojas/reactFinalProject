@@ -39,7 +39,7 @@ router.get('/:id', (req, res)=>{
   .then((post)=>{
     res.json(post)
   })
-  .catch(err => res.status(404).json(err))
+  .catch(err => res.status(404).json({nopostfound: "no post found with that ID"}))
 })
 
 //@route  POST api/posts
