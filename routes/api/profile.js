@@ -137,6 +137,21 @@ router.post('/', passport.authenticate('jwt', {session: false}),
   })
 })
 
+//@route  Delete api/profile
+//@desc   delete profile and user
+//@acces  private
+router.delete('/',passport.authenticate('jwt', {session: false}),
+(req, res)=>{
+  Profile.findOneAndRemove({user: req.user.id})
+  .then(()=>{
+    User.findOneAndRemove({ _id: req.user.id})
+    .then(()=>{
+      res.json({
+        msg: "User deleted"
+      })
+    })
+  })
+})
 
 
 
