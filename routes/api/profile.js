@@ -23,6 +23,7 @@ router.get('/', passport.authenticate('jwt', {session: false}),
 (req, res)=> {
   const errors = {}
   Profile.findOne({user: req.user.id})
+  .populate('user', ['name', 'email'])
   .then((profile)=>{
     if(!profile){
       errors.noprofile = "There is no profile for this User"
@@ -71,6 +72,7 @@ router.post('/', passport.authenticate('jwt', {session: false}),
   if(req.body.instagram)  profileFields.social.instagram = req.body.instagram
 
   Profile.findOne({ user: profileFields.user})
+  // .populate("user")
   .then((profile)=>{
     if(profile){
       //this means this will be an update, because it exist this profile

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 // const statesArray = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"];
 //Create Schema
 const ProfileSchema = new Schema({
-  user:          {type: Schema.Types.ObjectId, ref: 'users'},
+  user:          {type: Schema.Types.ObjectId, ref: 'User'},
   // handle:        {type: String, required: true, max: 40},
   car:           {type: String},
   status:        {type: String, required: true},
