@@ -6,32 +6,32 @@ module.exports = function  validateProfileInput(data) {
   let errors = {}
 
 
-  data.status = !isEmpty(data.status) ? data.status: ''
-  data.street = !isEmpty(data.street) ? data.street: ''
-  data.city = !isEmpty(data.city) ? data.city: ''
-  data.state = !isEmpty(data.state) ? data.state: ''
-  data.zip = !isEmpty(data.zip) ? data.zip: ''
+  // data.status = !isEmpty(data.status) ? data.status: ''
+  // data.street = !isEmpty(data.street) ? data.street: ''
+  // data.city = !isEmpty(data.city) ? data.city: ''
+  // data.state = !isEmpty(data.state) ? data.state: ''
+  // data.zip = !isEmpty(data.zip) ? data.zip: ''
 
-  if(Validator.isEmpty(data.status)){
-    errors.status = "Status field is required "
-  }
+  // if(Validator.isEmpty(data.status)){
+  //   errors.status = "Status field is required "
+  // }
   // if(Validator.isEmpty(data.address)){
   //   errors.address = "Address field is required "
   // }
 
-  if(Validator.isEmpty(data.street)){
-    errors.street = "Street field is required "
-  }
-  if(Validator.isEmpty(data.city)){
-    errors.city = "City field is required "
-  }
-  if(Validator.isEmpty(data.state)){
-    errors.state = "State field is required "
-  }
-  //
-  if(Validator.isEmpty(data.zip)){
-      errors.zip = "Zip field is required "
-  }
+  // if(Validator.isEmpty(data.street)){
+  //   errors.street = "Street field is required "
+  // }
+  // if(Validator.isEmpty(data.city)){
+  //   errors.city = "City field is required "
+  // }
+  // if(Validator.isEmpty(data.state)){
+  //   errors.state = "State field is required "
+  // }
+  // //
+  // if(Validator.isEmpty(data.zip)){
+  //     errors.zip = "Zip field is required "
+  // }
 
 
   if(!isEmpty(data.youtube)){

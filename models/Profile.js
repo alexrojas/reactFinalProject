@@ -6,25 +6,26 @@ const Schema = mongoose.Schema
 //Create Schema
 const ProfileSchema = new Schema({
   user:          {type: Schema.Types.ObjectId, ref: 'User'},
+  name:   {type: String},
   // handle:        {type: String, required: true, max: 40},
   car:           {type: String},
-  status:        {type: String, required: true},
+  status:        {type: String},
   message:       {type: String}, //i have to ask about this to NIck
   bio:           {type: String},
   referralCode:  {type: String},
 
   address:       {
         street: {
-          type: String, required: true
+          type: String,
         },
         city: {
-          type: String, required: true
+          type: String,
         },
         state: {
-            type: String, uppercase: true, required: true// ,enum: statesArray (maybe)
+            type: String,// ,enum: statesArray (maybe)
         },
         zip: {
-          type: Number, required: true
+          type: Number,
         }
   },
 

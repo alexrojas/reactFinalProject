@@ -75,7 +75,7 @@ router.get('/user/:user_id', (req, res)=>{
 //@acces  private (only signed in users, based on the payload)
 router.post('/', passport.authenticate('jwt', {session: false}),
 (req, res)=> {
-
+console.log("hitting 1")
     const { errors, isValid} = validateProfileInput(req.body)
 
     if(!isValid){
@@ -86,6 +86,7 @@ router.post('/', passport.authenticate('jwt', {session: false}),
   const profileFields = {}
   profileFields.user = req.user.id
   // if(req.body.handle)       profileFields.handle = req.body.handle // i might not use this one
+  if(req.body.name)          profileFields.name = req.body.name
   if(req.body.car)          profileFields.car = req.body.car
   if(req.body.status)       profileFields.status = req.body.status
   if(req.body.message)      profileFields.message = req.body.message
